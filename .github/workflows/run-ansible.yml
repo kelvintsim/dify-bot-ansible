@@ -1,6 +1,6 @@
 name: Deploy Azure OpenAI Langchain Bot
 
-on: 
+on:
   workflow_dispatch:
   workflow_run:
     workflows: ["Azure VM Deployment"]
@@ -16,24 +16,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
 
-    - name: Install Ansible
-      run: pip install ansible
+      - name: Install Ansible
+        run: pip install ansible
 
-    - name: Run Ansible Playbook
-      run: |
-        ansible-playbook -i "${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com", ansible_playbook.yml -u ${{ secrets.SSH_USER }} --ask-pass --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }} ENV_FILE='${{ secrets.ENV_FILE }}' HOST_URL=http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com"
-      env:
-        ANSIBLE_HOST_KEY_CHECKING: 'False'
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i "${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com", ansible_playbook.yml -u ${{ secrets.SSH_USER }} --ask-pass --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }} ENV_FILE='${{ secrets.ENV_FILE }}' HOST_URL=http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com"
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
 
-    - name: URL
-      run: |
-        echo "Admin Portal: http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com:8080"
-        echo "API docs: http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com:8100/docs"
+      - name: URL
+        run: |
+          echo "Admin Portal: http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com:8080"
+          echo "API docs: http://${VM_NAME_VAR}.${LOCATION_VAR}.cloudapp.azure.com:8100/docs"
